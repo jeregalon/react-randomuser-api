@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import useTable from "../hooks/useTable";
+import { SORT_BY } from "../services/constants";
 import { formatCustomDate } from "../services/functions";
 
 export default function UserTable() {
-	const { users, getUsers, coloredRows, setColoredRows } = useTable();
+	const { users, getUsers, coloredRows, setColoredRows, sort, setSort } =
+		useTable();
 
 	console.log(coloredRows);
 
@@ -14,6 +16,11 @@ export default function UserTable() {
 	const handleChange = () => {
 		setColoredRows(!coloredRows);
 		console.log(coloredRows);
+	};
+
+	const handleSortChange = (e) => {
+		const newSort = e.target.value;
+		setSort(newSort);
 	};
 
 	return (
@@ -27,6 +34,16 @@ export default function UserTable() {
 			<label for="selectColoredRows" className="text-white">
 				Colorear filas
 			</label>
+			<span className="ml-4 mr-2 text-white">Ordenar por:</span>
+			<select
+				value={sort}
+				onChange={handleSortChange}
+				className="bg-neutral-700 text-white px-3 py-1 rounded-md outline-none cursor-pointer"
+			>
+				<option value={SORT_BY.NAME}>Nombre</option>
+				<option value={SORT_BY.COUNTRY}>País</option>
+				<option value={SORT_BY.DATE_OF_BIRTH}>Fecha de nacimiento</option>
+			</select>
 			<div className="overflow-x-auto rounded border border-gray-300 shadow-sm dark:border-gray-600">
 				<table className="min-w-full divide-y-2 divide-gray-200 dark:divide-gray-700">
 					<thead className="ltr:text-left rtl:text-right">
