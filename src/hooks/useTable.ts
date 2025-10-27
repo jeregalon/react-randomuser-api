@@ -39,6 +39,7 @@ export default function useTable() {
 
 	return {
 		users: sortedUsers,
+		setUsers: setSortedUsers,
 		getUsers,
 		coloredRows,
 		setColoredRows,
