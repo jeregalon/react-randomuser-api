@@ -7,4 +7,6 @@ export interface User {
 	country: string;
 	email: string;
 	dob: string;
+	age: string;
+	phone: string;
 }
