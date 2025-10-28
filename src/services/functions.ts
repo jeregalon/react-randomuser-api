@@ -1,12 +1,12 @@
-import type { User } from "../types";
+import type { RandomUser, RandomUserResponse, User } from "../types";
 import { RANDOM_USERS_LINK } from "./constants";
 
 export async function getUsersFromAPI(num: number) {
 	try {
 		const res = await fetch(RANDOM_USERS_LINK + num);
-		const data = await res.json();
+		const data: RandomUserResponse = await res.json();
 		const dataMap = new Map<string, User>();
-		data.results?.map((d) =>
+		data.results?.map((d: RandomUser) =>
 			dataMap.set(d.login.uuid, {
 				picture: d.picture.thumbnail,
 				name: `${d.name.first} ${d.name.last}`,
@@ -16,13 +16,16 @@ export async function getUsersFromAPI(num: number) {
 				country: d.location.country,
 				email: d.email,
 				dob: d.dob.date,
-				age: d.dob.age,
+				age: `${d.dob.age}`,
 				phone: d.phone,
 			}),
 		);
 		return dataMap;
 	} catch (err) {
-		throw new Error(err);
+		if (err instanceof Error) {
+			throw new Error(err.message);
+		}
+		throw new Error(String(err));
 	}
 }
 

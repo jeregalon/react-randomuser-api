@@ -13,3 +13,6 @@ export const ORDER = {
 };
 
 export const NUMBER_OF_ROWS = 500;
+
+export const TABLE_GRID =
+	"grid-cols-[80px_1.2fr_0.8fr_1fr_1fr_1fr_2.5fr_1fr_0.3fr_1fr_40px]";

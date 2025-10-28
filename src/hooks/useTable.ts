@@ -16,12 +16,15 @@ export default function useTable() {
 			const newUsers = await getUsersFromAPI(num);
 			setUsers(newUsers);
 			setInitialState(newUsers);
-		} catch (e) {
-			throw new Error(e);
+		} catch (err) {
+			if (err instanceof Error) {
+				throw new Error(err.message);
+			}
+			throw new Error(String(err));
 		}
 	};
 
-	const sortUsers = (_sort) => {
+	const sortUsers = (_sort: keyof typeof SORT_BY) => {
 		if (!users || _sort === SORT_BY.NONE) return;
 		const usersArray = Array.from(users);
 		const newUsersArray = [...usersArray].sort((a, b) => {

@@ -3,20 +3,26 @@ import { TableContext } from "../context/TableContext";
 import { SORT_BY } from "../services/constants";
 
 export default function Header() {
+	const context = useContext(TableContext);
+
+	if (!context) {
+		throw new Error("TableContext must be used within a TableProvider");
+	}
+
 	const {
 		coloredRows,
 		changeColoredRows,
 		sortUsers,
 		backToInitialState,
 		sort,
-	} = useContext(TableContext);
+	} = context;
 
 	const handleChange = () => {
 		changeColoredRows();
 	};
 
-	const handleSortChange = (e) => {
-		const newSort = e.target.value;
+	const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		const newSort = e.target.value as keyof typeof SORT_BY;
 		sortUsers(newSort);
 	};
 
