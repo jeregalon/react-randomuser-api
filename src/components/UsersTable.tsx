@@ -11,7 +11,7 @@ export default function UsersTable() {
 		throw new Error("TableContext must be used within a TableProvider");
 	}
 
-	const { users, coloredRows, deleteUser } = context;
+	const { users, deleteUser } = context;
 
 	const [scrollbarWidth] = useState(() => getScrollbarSize());
 

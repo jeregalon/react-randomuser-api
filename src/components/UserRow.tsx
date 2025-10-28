@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
+import { TableContext } from "../context/TableContext";
 import { TABLE_GRID } from "../services/constants";
 import { formatCustomDate } from "../services/functions";
 import type { User } from "../types";
@@ -29,11 +30,21 @@ export default function UserRow({
 
 	console.log(`Fila renderizada: ${index} | Total renders: ${renderCount}`);
 
+	const context = useContext(TableContext);
+
+	if (!context) {
+		throw new Error("TableContext must be used within a TableProvider");
+	}
+
+	const { coloredRows } = context;
+
 	const u = usersArray[index];
+
+	const rowColor = coloredRows && index % 2 === 0 ? "bg-[#222]" : "";
 
 	return (
 		<div
-			className={`grid ${TABLE_GRID} items-center p-1 px-2 text-sm text-white border-b border-gray-700`}
+			className={`grid ${TABLE_GRID} ${rowColor} items-center p-1 px-2 text-sm text-white border-b border-gray-700`}
 			style={style}
 		>
 			<div>
