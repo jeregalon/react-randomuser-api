@@ -1,5 +1,7 @@
 import { useEffect } from "react";
+import Header from "./components/Header";
 import UsersTable from "./components/UsersTable";
+import { TableContext } from "./context/TableContext";
 import useTable from "./hooks/useTable";
 import { NUMBER_OF_ROWS } from "./services/constants";
 
@@ -20,18 +22,23 @@ function App() {
 	}, []);
 
 	return (
-		<main className="bg-black">
-			<h1>Technical Test</h1>
-			<UsersTable
-				users={users}
-				coloredRows={coloredRows}
-				changeColoredRows={changeColoredRows}
-				sortUsers={sortUsers}
-				backToInitialState={backToInitialState}
-				deleteUser={deleteUser}
-				sort={sort}
-			/>
-		</main>
+		<TableContext
+			value={{
+				users,
+				coloredRows,
+				changeColoredRows,
+				sortUsers,
+				backToInitialState,
+				deleteUser,
+				sort,
+			}}
+		>
+			<main className="bg-black">
+				<h1>Technical Test</h1>
+				<Header />
+				<UsersTable />
+			</main>
+		</TableContext>
 	);
 }
 
