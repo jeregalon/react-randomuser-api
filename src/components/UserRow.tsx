@@ -1,34 +1,35 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext } from "react";
 import { TableContext } from "../context/TableContext";
 import { TABLE_GRID } from "../services/constants";
 import { formatCustomDate } from "../services/functions";
 import type { User } from "../types";
 
-let renderCount = 0;
+// const renderCount = 0;
 
 interface UserRowProps {
 	index: number;
 	style: React.CSSProperties;
-	usersArray: [string, User][];
+	filteredUsers: [string, User][];
 	handleDelete: (key: string) => void;
 }
 
 export default function UserRow({
 	index,
-	usersArray,
+	filteredUsers,
 	style,
 	handleDelete,
 }: UserRowProps) {
-	const hasRendered = useRef(false);
-	useEffect(() => {
-		if (!hasRendered.current) {
-			renderCount++;
-			hasRendered.current = true;
-			console.log("Total filas renderizadas hasta ahora:", renderCount);
-		}
-	}, []);
+	// // Comprobación de filas renderizadas
+	// const hasRendered = useRef(false);
+	// useEffect(() => {
+	// 	if (!hasRendered.current) {
+	// 		renderCount++;
+	// 		hasRendered.current = true;
+	// 		console.log("Total filas renderizadas hasta ahora:", renderCount);
+	// 	}
+	// }, []);
 
-	console.log(`Fila renderizada: ${index} | Total renders: ${renderCount}`);
+	// console.log(`Fila renderizada: ${index} | Total renders: ${renderCount}`);
 
 	const context = useContext(TableContext);
 
@@ -38,7 +39,7 @@ export default function UserRow({
 
 	const { coloredRows } = context;
 
-	const u = usersArray[index];
+	const u = filteredUsers[index];
 
 	const rowColor = coloredRows && index % 2 === 0 ? "bg-[#222]" : "";
 

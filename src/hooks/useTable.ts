@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { SORT_BY } from "../services/constants";
+import { useMemo, useState } from "react";
+import { countryFilterInitialValue, SORT_BY } from "../services/constants";
 import { getUsersFromAPI } from "../services/functions";
 import type { User } from "../types";
 
@@ -10,6 +10,37 @@ export default function useTable() {
 	const [initialState, setInitialState] = useState<Map<string, User> | null>(
 		null,
 	);
+	const [selectedCountry, setSelectedCountry] = useState<string>(
+		countryFilterInitialValue,
+	);
+
+	const usersArray = useMemo(() => {
+		if (!users) return [];
+		return Array.from(users);
+	}, [users]);
+
+	const setOfCountries = useMemo(() => {
+		const countries: Set<string> = new Set();
+		users?.forEach((user) => {
+			countries.add(user.country);
+		});
+		return countries;
+	}, [users]);
+
+	const sortedCountries = useMemo(() => {
+		return [...setOfCountries].sort();
+	}, [setOfCountries]);
+
+	const filteredUsers = useMemo(() => {
+		return selectedCountry === countryFilterInitialValue
+			? usersArray
+			: usersArray.filter((u) => u[1].country === selectedCountry);
+	}, [selectedCountry, usersArray]);
+
+	const changeSelectedCountry = (option: string) => {
+		if (option === selectedCountry) return;
+		setSelectedCountry(option);
+	};
 
 	const getUsers = async (num: number) => {
 		try {
@@ -26,7 +57,6 @@ export default function useTable() {
 
 	const sortUsers = (_sort: keyof typeof SORT_BY) => {
 		if (!users || _sort === SORT_BY.NONE) return;
-		const usersArray = Array.from(users);
 		const newUsersArray = [...usersArray].sort((a, b) => {
 			if (_sort === SORT_BY.NAME) {
 				return a[1].name.localeCompare(b[1].name, undefined, {
@@ -66,6 +96,7 @@ export default function useTable() {
 
 	return {
 		users,
+		filteredUsers,
 		getUsers,
 		sortUsers,
 		backToInitialState,
@@ -73,5 +104,8 @@ export default function useTable() {
 		changeColoredRows,
 		deleteUser,
 		sort,
+		sortedCountries,
+		selectedCountry,
+		changeSelectedCountry,
 	};
 }

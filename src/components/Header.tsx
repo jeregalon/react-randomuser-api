@@ -1,6 +1,11 @@
 import { useContext } from "react";
 import { TableContext } from "../context/TableContext";
-import { SORT_BY } from "../services/constants";
+import {
+	COUNTRY_CODES,
+	countryFilterInitialValue,
+	SORT_BY,
+} from "../services/constants";
+import { countryCodeToFlagEmoji } from "../services/functions";
 
 export default function Header() {
 	const context = useContext(TableContext);
@@ -15,6 +20,9 @@ export default function Header() {
 		sortUsers,
 		backToInitialState,
 		sort,
+		sortedCountries,
+		selectedCountry,
+		changeSelectedCountry,
 	} = context;
 
 	const handleChange = () => {
@@ -28,6 +36,11 @@ export default function Header() {
 
 	const handleRestore = () => {
 		backToInitialState();
+	};
+
+	const handleFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		const newSelectedCountry = e.target.value;
+		changeSelectedCountry(newSelectedCountry);
 	};
 
 	return (
@@ -59,6 +72,21 @@ export default function Header() {
 			>
 				Restaurar
 			</button>
+			<span className="ml-4 mr-2 text-white">Filtrar por país:</span>
+			<select
+				value={selectedCountry}
+				onChange={handleFilter}
+				className="bg-neutral-700 text-white px-3 py-1 rounded-md outline-none cursor-pointer"
+			>
+				<option
+					value={countryFilterInitialValue}
+				>{`❌ ${countryFilterInitialValue}`}</option>
+				{sortedCountries.map((country) => (
+					<option key={country} value={country}>
+						{`${countryCodeToFlagEmoji(COUNTRY_CODES[country])} ${country}`}
+					</option>
+				))}
+			</select>
 		</main>
 	);
 }

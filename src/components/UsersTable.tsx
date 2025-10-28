@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import { getScrollbarSize, List } from "react-window";
 import { TableContext } from "../context/TableContext";
 import { TABLE_GRID } from "../services/constants";
@@ -11,18 +11,13 @@ export default function UsersTable() {
 		throw new Error("TableContext must be used within a TableProvider");
 	}
 
-	const { users, deleteUser } = context;
+	const { filteredUsers, deleteUser } = context;
 
 	const [scrollbarWidth] = useState(() => getScrollbarSize());
 
 	const handleDelete = (userKey: string) => {
 		deleteUser(userKey);
 	};
-
-	const usersArray = useMemo(() => {
-		if (!users) return [];
-		return Array.from(users);
-	}, [users]);
 
 	return (
 		<div className="h-500 flex flex-col">
@@ -45,12 +40,12 @@ export default function UsersTable() {
 				</div>
 			</div>
 			<div className="overflow-hidden">
-				{usersArray && (
+				{filteredUsers && (
 					<List
 						rowComponent={UserRow}
-						rowCount={usersArray.length}
+						rowCount={filteredUsers.length}
 						rowHeight={75}
-						rowProps={{ usersArray, handleDelete }}
+						rowProps={{ filteredUsers, handleDelete }}
 					/>
 				)}
 			</div>

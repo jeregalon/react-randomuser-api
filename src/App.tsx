@@ -8,6 +8,7 @@ import { NUMBER_OF_ROWS } from "./services/constants";
 function App() {
 	const {
 		users,
+		filteredUsers,
 		getUsers,
 		sortUsers,
 		backToInitialState,
@@ -15,6 +16,9 @@ function App() {
 		changeColoredRows,
 		deleteUser,
 		sort,
+		sortedCountries,
+		selectedCountry,
+		changeSelectedCountry,
 	} = useTable();
 
 	useEffect(() => {
@@ -25,12 +29,16 @@ function App() {
 		<TableContext
 			value={{
 				users,
+				filteredUsers,
 				coloredRows,
 				changeColoredRows,
 				sortUsers,
 				backToInitialState,
 				deleteUser,
 				sort,
+				sortedCountries,
+				selectedCountry,
+				changeSelectedCountry,
 			}}
 		>
 			<main className="bg-black">

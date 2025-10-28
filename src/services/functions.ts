@@ -38,3 +38,11 @@ export const formatCustomDate = (dateString: string) => {
 		year: "numeric",
 	});
 };
+
+export function countryCodeToFlagEmoji(countryCode: string): string {
+	const code = countryCode.toUpperCase();
+	return code
+		.split("")
+		.map((char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
+		.join("");
+}

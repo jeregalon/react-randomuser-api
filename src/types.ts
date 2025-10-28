@@ -45,10 +45,14 @@ export type RandomUserResponse = {
 
 export interface TableContextType {
 	users: Map<string, User> | null;
+	filteredUsers: Array<[string, User]>;
 	coloredRows: boolean;
 	changeColoredRows: () => void;
 	sortUsers: (_sort: keyof typeof SORT_BY) => void;
 	backToInitialState: () => void;
 	deleteUser: (key: string) => void;
 	sort: string;
+	sortedCountries: Array<string>;
+	selectedCountry: string;
+	changeSelectedCountry: (option: string) => void;
 }
