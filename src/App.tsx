@@ -19,6 +19,8 @@ function App() {
 		sortedCountries,
 		selectedCountry,
 		changeSelectedCountry,
+		error,
+		loading,
 	} = useTable();
 
 	useEffect(() => {
@@ -39,6 +41,8 @@ function App() {
 				sortedCountries,
 				selectedCountry,
 				changeSelectedCountry,
+				error,
+				loading,
 			}}
 		>
 			<main className="bg-black">

@@ -48,11 +48,16 @@ export interface TableContextType {
 	filteredUsers: Array<[string, User]>;
 	coloredRows: boolean;
 	changeColoredRows: () => void;
-	sortUsers: (_sort: keyof typeof SORT_BY) => void;
+	sortUsers: (
+		_sort: keyof typeof SORT_BY,
+		_users: Array<[string, User]>,
+	) => void;
 	backToInitialState: () => void;
 	deleteUser: (key: string) => void;
 	sort: string;
 	sortedCountries: Array<string>;
 	selectedCountry: string;
 	changeSelectedCountry: (option: string) => void;
+	error: string | null;
+	loading: boolean;
 }

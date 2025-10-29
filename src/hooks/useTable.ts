@@ -13,6 +13,8 @@ export default function useTable() {
 	const [selectedCountry, setSelectedCountry] = useState<string>(
 		countryFilterInitialValue,
 	);
+	const [error, setError] = useState<string | null>(null);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const usersArray = useMemo(() => {
 		if (!users) return [];
@@ -44,20 +46,27 @@ export default function useTable() {
 
 	const getUsers = async (num: number) => {
 		try {
+			setError(null);
+			setLoading(true);
 			const newUsers = await getUsersFromAPI(num);
+			setLoading(false);
 			setUsers(newUsers);
 			setInitialState(newUsers);
 		} catch (err) {
 			if (err instanceof Error) {
-				throw new Error(err.message);
+				setError(err.message);
 			}
-			throw new Error(String(err));
+			setError(String(err));
+			setLoading(false);
 		}
 	};
 
-	const sortUsers = (_sort: keyof typeof SORT_BY) => {
-		if (!users || _sort === SORT_BY.NONE) return;
-		const newUsersArray = [...usersArray].sort((a, b) => {
+	const sortUsers = (
+		_sort: keyof typeof SORT_BY,
+		_users: Array<[string, User]> | null = usersArray,
+	) => {
+		if (!_users || _sort === SORT_BY.NONE) return;
+		const newUsersArray = [..._users].sort((a, b) => {
 			if (_sort === SORT_BY.NAME) {
 				return a[1].name.localeCompare(b[1].name, undefined, {
 					sensitivity: "base",
@@ -90,8 +99,8 @@ export default function useTable() {
 	};
 
 	const backToInitialState = () => {
-		setSort(SORT_BY.NONE);
-		setUsers(initialState);
+		const initialStateArray = initialState ? Array.from(initialState) : null;
+		sortUsers(sort as keyof typeof SORT_BY, initialStateArray);
 	};
 
 	return {
@@ -107,5 +116,7 @@ export default function useTable() {
 		sortedCountries,
 		selectedCountry,
 		changeSelectedCountry,
+		error,
+		loading,
 	};
 }

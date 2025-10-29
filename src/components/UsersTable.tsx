@@ -11,7 +11,7 @@ export default function UsersTable() {
 		throw new Error("TableContext must be used within a TableProvider");
 	}
 
-	const { filteredUsers, deleteUser } = context;
+	const { filteredUsers, deleteUser, error, loading } = context;
 
 	const [scrollbarWidth] = useState(() => getScrollbarSize());
 
@@ -47,6 +47,17 @@ export default function UsersTable() {
 						rowHeight={75}
 						rowProps={{ filteredUsers, handleDelete }}
 					/>
+				)}
+				{error && (
+					<div className="flex flex-col items-center w-full">
+						<h1 className="text-red-500">Error cargando los datos</h1>
+						<h2 className="text-red-500">{error}</h2>
+					</div>
+				)}
+				{loading && (
+					<div className="flex flex-col items-center w-full">
+						<h1 className="text-white">Cargando...</h1>
+					</div>
 				)}
 			</div>
 		</div>
