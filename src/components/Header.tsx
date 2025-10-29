@@ -15,13 +15,11 @@ export default function Header() {
 	}
 
 	const {
-		coloredRows,
+		state,
 		changeColoredRows,
 		sortUsers,
 		backToInitialState,
-		sort,
 		sortedCountries,
-		selectedCountry,
 		changeSelectedCountry,
 	} = context;
 
@@ -49,14 +47,14 @@ export default function Header() {
 				type="checkbox"
 				id="selectColoredRows"
 				onChange={handleChange}
-				checked={coloredRows}
+				checked={state.coloredRows}
 			/>
 			<label htmlFor="selectColoredRows" className="text-white">
 				Colorear filas
 			</label>
 			<span className="ml-4 mr-2 text-white">Ordenar por:</span>
 			<select
-				value={sort}
+				value={state.sort}
 				onChange={handleSortChange}
 				className="bg-neutral-700 text-white px-3 py-1 rounded-md outline-none cursor-pointer"
 			>
@@ -74,7 +72,7 @@ export default function Header() {
 			</button>
 			<span className="ml-4 mr-2 text-white">Filtrar por país:</span>
 			<select
-				value={selectedCountry}
+				value={state.selectedCountry}
 				onChange={handleFilter}
 				className="bg-neutral-700 text-white px-3 py-1 rounded-md outline-none cursor-pointer"
 			>

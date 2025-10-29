@@ -44,20 +44,35 @@ export type RandomUserResponse = {
 };
 
 export interface TableContextType {
-	users: Map<string, User> | null;
+	state: State;
 	filteredUsers: Array<[string, User]>;
-	coloredRows: boolean;
-	changeColoredRows: () => void;
-	sortUsers: (
-		_sort: keyof typeof SORT_BY,
-		_users: Array<[string, User]>,
-	) => void;
+	initialState: State;
+	sortUsers: (_sort: SortBy) => void;
 	backToInitialState: () => void;
+	changeColoredRows: () => void;
 	deleteUser: (key: string) => void;
-	sort: string;
 	sortedCountries: Array<string>;
-	selectedCountry: string;
 	changeSelectedCountry: (option: string) => void;
+}
+
+export interface State {
+	users: Map<string, User>;
+	sort: SortBy;
+	coloredRows: boolean;
+	selectedCountry: string;
 	error: string | null;
 	loading: boolean;
 }
+
+export type Action =
+	| { type: "WAITING_FOR_API" }
+	| { type: "SET_USERS"; payload: Map<string, User> }
+	| { type: "DELETE_USER"; payload: string }
+	| { type: "ERROR"; payload: string }
+	| { type: "SORT_USERS"; payload: SortBy }
+	| { type: "SET_COLORED_ROWS"; payload: boolean }
+	| { type: "SET_SELECTED_COUNTRY"; payload: string }
+	| { type: "RESTORE"; payload: Map<string, User> };
+// | { type: "RESTORE"; payload: null };
+
+export type SortBy = keyof typeof SORT_BY;

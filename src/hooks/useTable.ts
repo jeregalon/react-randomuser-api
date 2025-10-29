@@ -1,122 +1,120 @@
-import { useMemo, useState } from "react";
+import { useMemo, useReducer, useState } from "react";
 import { countryFilterInitialValue, SORT_BY } from "../services/constants";
 import { getUsersFromAPI } from "../services/functions";
-import type { User } from "../types";
+import { reducer } from "../services/reducer";
+import type { SortBy, State, User } from "../types";
 
 export default function useTable() {
-	const [users, setUsers] = useState<Map<string, User> | null>(null);
-	const [coloredRows, setColoredRows] = useState(true);
-	const [sort, setSort] = useState(SORT_BY.NONE);
-	const [initialState, setInitialState] = useState<Map<string, User> | null>(
-		null,
-	);
-	const [selectedCountry, setSelectedCountry] = useState<string>(
-		countryFilterInitialValue,
-	);
-	const [error, setError] = useState<string | null>(null);
-	const [loading, setLoading] = useState<boolean>(false);
+	// const [users, setUsers] = useState<Map<string, User> | null>(null);
+	// const [coloredRows, setColoredRows] = useState(true);
+	// const [sort, setSort] = useState(SORT_BY.NONE);
+	// const [selectedCountry, setSelectedCountry] = useState<string>(
+	// 	countryFilterInitialValue,
+	// );
+	// const [error, setError] = useState<string | null>(null);
+	// const [loading, setLoading] = useState<boolean>(false);
+
+	const [initialState, setInitialState] = useState<State>({
+		users: new Map<string, User>(),
+		sort: SORT_BY.NONE as SortBy,
+		coloredRows: true,
+		selectedCountry: countryFilterInitialValue,
+		error: null,
+		loading: false,
+	});
+
+	const [state, dispatch] = useReducer(reducer, initialState);
 
 	const usersArray = useMemo(() => {
-		if (!users) return [];
-		return Array.from(users);
-	}, [users]);
+		if (!state.users) return [];
+		return Array.from(state.users);
+	}, [state.users]);
 
 	const setOfCountries = useMemo(() => {
 		const countries: Set<string> = new Set();
-		users?.forEach((user) => {
+		state.users?.forEach((user) => {
 			countries.add(user.country);
 		});
 		return countries;
-	}, [users]);
+	}, [state.users]);
 
 	const sortedCountries = useMemo(() => {
 		return [...setOfCountries].sort();
 	}, [setOfCountries]);
 
-	const filteredUsers = useMemo(() => {
-		return selectedCountry === countryFilterInitialValue
+	const sortedUsers = useMemo(() => {
+		return state.sort === SORT_BY.NONE
 			? usersArray
-			: usersArray.filter((u) => u[1].country === selectedCountry);
-	}, [selectedCountry, usersArray]);
+			: [...usersArray].sort((a, b) => {
+					if (state.sort === SORT_BY.NAME) {
+						return a[1].name.localeCompare(b[1].name, undefined, {
+							sensitivity: "base",
+						});
+					} else if (state.sort === SORT_BY.COUNTRY) {
+						return a[1].country.localeCompare(b[1].country, undefined, {
+							sensitivity: "base",
+						});
+					} else if (state.sort === SORT_BY.DATE_OF_BIRTH) {
+						return new Date(a[1].dob).getTime() - new Date(b[1].dob).getTime();
+					} else {
+						return 0;
+					}
+				});
+	}, [state.sort, usersArray]);
+
+	const filteredUsers = useMemo(() => {
+		return state.selectedCountry === countryFilterInitialValue
+			? sortedUsers
+			: sortedUsers.filter((u) => u[1].country === state.selectedCountry);
+	}, [state.selectedCountry, sortedUsers]);
 
 	const changeSelectedCountry = (option: string) => {
-		if (option === selectedCountry) return;
-		setSelectedCountry(option);
+		dispatch({ type: "SET_SELECTED_COUNTRY", payload: option });
 	};
 
 	const getUsers = async (num: number) => {
 		try {
-			setError(null);
-			setLoading(true);
+			dispatch({ type: "WAITING_FOR_API" });
 			const newUsers = await getUsersFromAPI(num);
-			setLoading(false);
-			setUsers(newUsers);
-			setInitialState(newUsers);
+			setInitialState((prev) => ({
+				...prev,
+				users: newUsers,
+			}));
+			dispatch({ type: "SET_USERS", payload: newUsers });
 		} catch (err) {
 			if (err instanceof Error) {
-				setError(err.message);
+				dispatch({ type: "ERROR", payload: err.message });
 			}
-			setError(String(err));
-			setLoading(false);
+			dispatch({ type: "ERROR", payload: String(err) });
 		}
 	};
 
-	const sortUsers = (
-		_sort: keyof typeof SORT_BY,
-		_users: Array<[string, User]> | null = usersArray,
-	) => {
-		if (!_users || _sort === SORT_BY.NONE) return;
-		const newUsersArray = [..._users].sort((a, b) => {
-			if (_sort === SORT_BY.NAME) {
-				return a[1].name.localeCompare(b[1].name, undefined, {
-					sensitivity: "base",
-				});
-			} else if (_sort === SORT_BY.COUNTRY) {
-				return a[1].country.localeCompare(b[1].country, undefined, {
-					sensitivity: "base",
-				});
-			} else if (_sort === SORT_BY.DATE_OF_BIRTH) {
-				return new Date(a[1].dob).getTime() - new Date(b[1].dob).getTime();
-			} else {
-				return -1;
-			}
-		});
-		const newUsers = new Map(newUsersArray);
-		setUsers(newUsers);
-		setSort(_sort);
+	const sortUsers = (_sort: SortBy) => {
+		dispatch({ type: "SORT_USERS", payload: _sort });
 	};
 
 	const changeColoredRows = () => {
-		setColoredRows(!coloredRows);
+		dispatch({ type: "SET_COLORED_ROWS", payload: !state.coloredRows });
 	};
 
 	const deleteUser = (key: string) => {
-		setUsers((prev) => {
-			const newUsers = new Map(prev);
-			newUsers.delete(key);
-			return newUsers;
-		});
+		dispatch({ type: "DELETE_USER", payload: key });
 	};
 
 	const backToInitialState = () => {
-		const initialStateArray = initialState ? Array.from(initialState) : null;
-		sortUsers(sort as keyof typeof SORT_BY, initialStateArray);
+		dispatch({ type: "RESTORE", payload: initialState.users });
 	};
 
 	return {
-		users,
+		state,
 		filteredUsers,
+		initialState,
 		getUsers,
 		sortUsers,
 		backToInitialState,
-		coloredRows,
 		changeColoredRows,
 		deleteUser,
-		sort,
 		sortedCountries,
-		selectedCountry,
 		changeSelectedCountry,
-		error,
-		loading,
 	};
 }
