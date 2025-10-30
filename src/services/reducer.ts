@@ -1,4 +1,5 @@
 import type { Action, State } from "../types";
+import { ORDER } from "./constants";
 
 export const reducer = (state: State, action: Action) => {
 	const { type: actionType } = action;
@@ -37,6 +38,14 @@ export const reducer = (state: State, action: Action) => {
 			return {
 				...state,
 				sort: action.payload,
+				order: ORDER.DESC,
+			};
+		}
+		case "SORT_USERS_BY_HEADER_CLICKING": {
+			return {
+				...state,
+				sort: action.payload.sort,
+				order: action.payload.order,
 			};
 		}
 		case "SET_COLORED_ROWS": {

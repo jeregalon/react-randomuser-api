@@ -37,11 +37,11 @@ export default function UserRow({
 		throw new Error("TableContext must be used within a TableProvider");
 	}
 
-	const { coloredRows } = context;
+	const { state } = context;
 
 	const u = filteredUsers[index];
 
-	const rowColor = coloredRows && index % 2 === 0 ? "bg-[#222]" : "";
+	const rowColor = state.coloredRows && index % 2 === 0 ? "bg-[#222]" : "";
 
 	return (
 		<div

@@ -1,7 +1,8 @@
 import { useContext, useState } from "react";
 import { getScrollbarSize, List } from "react-window";
 import { TableContext } from "../context/TableContext";
-import { TABLE_GRID } from "../services/constants";
+import { SORT_BY, TABLE_GRID } from "../services/constants";
+import ColumnHeaderButtons from "./ColumnHeaderButtons";
 import UserRow from "./UserRow";
 
 export default function UsersTable() {
@@ -19,6 +20,19 @@ export default function UsersTable() {
 		deleteUser(userKey);
 	};
 
+	const activeButton = () => {
+		if (state.sort === SORT_BY.NAME) return 0;
+		else if (state.sort === SORT_BY.GENDER) return 1;
+		else if (state.sort === SORT_BY.CITY) return 2;
+		else if (state.sort === SORT_BY.STATE) return 3;
+		else if (state.sort === SORT_BY.COUNTRY) return 4;
+		else if (state.sort === SORT_BY.EMAIL) return 5;
+		else if (state.sort === SORT_BY.DATE_OF_BIRTH) return 6;
+		else if (state.sort === SORT_BY.AGE) return 7;
+		else if (state.sort === SORT_BY.PHONE) return 8;
+		else return false;
+	};
+
 	return (
 		<div className="h-500 flex flex-col">
 			<div className="bg-teal-600">
@@ -27,15 +41,7 @@ export default function UsersTable() {
 					style={{ paddingRight: scrollbarWidth }}
 				>
 					<div>Picture</div>
-					<div>Name</div>
-					<div>Gender</div>
-					<div>City</div>
-					<div>State</div>
-					<div>Country</div>
-					<div>Email</div>
-					<div>Day of birth</div>
-					<div>Age</div>
-					<div>Phone</div>
+					<ColumnHeaderButtons activeButton={activeButton()} />
 					<div className="w-10">Delete</div>
 				</div>
 			</div>

@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import UsersTable from "./components/UsersTable";
 import { TableContext } from "./context/TableContext";
 import useTable from "./hooks/useTable";
-import { NUMBER_OF_ROWS } from "./services/constants";
+import { arrayOfTexts, NUMBER_OF_ROWS } from "./services/constants";
 
 function App() {
 	const {
@@ -12,6 +12,7 @@ function App() {
 		initialState,
 		getUsers,
 		sortUsers,
+		sortUsersByHeaderClicking,
 		backToInitialState,
 		changeColoredRows,
 		deleteUser,
@@ -30,11 +31,13 @@ function App() {
 				filteredUsers,
 				initialState,
 				sortUsers,
+				sortUsersByHeaderClicking,
 				backToInitialState,
 				changeColoredRows,
 				deleteUser,
 				sortedCountries,
 				changeSelectedCountry,
+				arrayOfTexts,
 			}}
 		>
 			<main className="bg-black">

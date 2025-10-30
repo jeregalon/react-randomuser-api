@@ -6,6 +6,7 @@ import {
 	SORT_BY,
 } from "../services/constants";
 import { countryCodeToFlagEmoji } from "../services/functions";
+import type { SortBy } from "../types";
 
 export default function Header() {
 	const context = useContext(TableContext);
@@ -28,7 +29,7 @@ export default function Header() {
 	};
 
 	const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const newSort = e.target.value as keyof typeof SORT_BY;
+		const newSort = e.target.value as SortBy;
 		sortUsers(newSort);
 	};
 

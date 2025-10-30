@@ -1,22 +1,18 @@
 import { useMemo, useReducer, useState } from "react";
-import { countryFilterInitialValue, SORT_BY } from "../services/constants";
+import {
+	countryFilterInitialValue,
+	ORDER,
+	SORT_BY,
+} from "../services/constants";
 import { getUsersFromAPI } from "../services/functions";
 import { reducer } from "../services/reducer";
-import type { SortBy, State, User } from "../types";
+import type { Order, SortBy, State, User } from "../types";
 
 export default function useTable() {
-	// const [users, setUsers] = useState<Map<string, User> | null>(null);
-	// const [coloredRows, setColoredRows] = useState(true);
-	// const [sort, setSort] = useState(SORT_BY.NONE);
-	// const [selectedCountry, setSelectedCountry] = useState<string>(
-	// 	countryFilterInitialValue,
-	// );
-	// const [error, setError] = useState<string | null>(null);
-	// const [loading, setLoading] = useState<boolean>(false);
-
 	const [initialState, setInitialState] = useState<State>({
 		users: new Map<string, User>(),
 		sort: SORT_BY.NONE as SortBy,
+		order: ORDER.NONE as Order,
 		coloredRows: true,
 		selectedCountry: countryFilterInitialValue,
 		error: null,
@@ -93,6 +89,14 @@ export default function useTable() {
 		dispatch({ type: "SORT_USERS", payload: _sort });
 	};
 
+	const sortUsersByHeaderClicking = (_sort: SortBy, _order: Order) => {
+		console.log(`${_sort} ${_order}`);
+		dispatch({
+			type: "SORT_USERS_BY_HEADER_CLICKING",
+			payload: { sort: _sort, order: _order },
+		});
+	};
+
 	const changeColoredRows = () => {
 		dispatch({ type: "SET_COLORED_ROWS", payload: !state.coloredRows });
 	};
@@ -111,6 +115,7 @@ export default function useTable() {
 		initialState,
 		getUsers,
 		sortUsers,
+		sortUsersByHeaderClicking,
 		backToInitialState,
 		changeColoredRows,
 		deleteUser,

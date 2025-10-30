@@ -1,4 +1,4 @@
-import type { SORT_BY } from "./services/constants";
+import type { arrayOfTexts, ORDER, SORT_BY } from "./services/constants";
 
 export interface User {
 	picture: string;
@@ -48,16 +48,19 @@ export interface TableContextType {
 	filteredUsers: Array<[string, User]>;
 	initialState: State;
 	sortUsers: (_sort: SortBy) => void;
+	sortUsersByHeaderClicking: (_sort: SortBy, _order: Order) => void;
 	backToInitialState: () => void;
 	changeColoredRows: () => void;
 	deleteUser: (key: string) => void;
 	sortedCountries: Array<string>;
 	changeSelectedCountry: (option: string) => void;
+	arrayOfTexts: readonly string[];
 }
 
 export interface State {
 	users: Map<string, User>;
 	sort: SortBy;
+	order: Order;
 	coloredRows: boolean;
 	selectedCountry: string;
 	error: string | null;
@@ -70,9 +73,23 @@ export type Action =
 	| { type: "DELETE_USER"; payload: string }
 	| { type: "ERROR"; payload: string }
 	| { type: "SORT_USERS"; payload: SortBy }
+	| {
+			type: "SORT_USERS_BY_HEADER_CLICKING";
+			payload: { sort: SortBy; order: Order };
+	  }
 	| { type: "SET_COLORED_ROWS"; payload: boolean }
 	| { type: "SET_SELECTED_COUNTRY"; payload: string }
 	| { type: "RESTORE"; payload: Map<string, User> };
-// | { type: "RESTORE"; payload: null };
 
 export type SortBy = keyof typeof SORT_BY;
+
+export type Order = keyof typeof ORDER;
+
+type ArrayOfTextsIndex = Extract<keyof typeof arrayOfTexts, `${number}`>;
+// Resultado: "0" | "1" | "2" | ... | "8"
+
+export type NumericArrayOfTextsIndex =
+	ArrayOfTextsIndex extends `${infer N extends number}` ? N : never;
+// Resultado: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 ✅
+
+export type ActiveButtonType = NumericArrayOfTextsIndex | false;
