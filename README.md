@@ -9,5 +9,5 @@ The app uses a useContext to pass properties (e.g., the list of users) from the 
 
 It also lists users in a Map instead of an Array, to make searching for users by their key faster and thus speed up rendering when a row is deleted
 
-To install, clone this repository and type "pnpm install" in the terminal 
+To install, clone this repository and type "pnpm install" on the terminal 
 
