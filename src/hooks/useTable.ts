@@ -39,24 +39,52 @@ export default function useTable() {
 	}, [setOfCountries]);
 
 	const sortedUsers = useMemo(() => {
-		return state.sort === SORT_BY.NONE
-			? usersArray
-			: [...usersArray].sort((a, b) => {
-					if (state.sort === SORT_BY.NAME) {
-						return a[1].name.localeCompare(b[1].name, undefined, {
-							sensitivity: "base",
-						});
-					} else if (state.sort === SORT_BY.COUNTRY) {
-						return a[1].country.localeCompare(b[1].country, undefined, {
-							sensitivity: "base",
-						});
-					} else if (state.sort === SORT_BY.DATE_OF_BIRTH) {
-						return new Date(a[1].dob).getTime() - new Date(b[1].dob).getTime();
-					} else {
-						return 0;
-					}
-				});
-	}, [state.sort, usersArray]);
+		const sortedArray =
+			state.sort === SORT_BY.NONE
+				? usersArray
+				: [...usersArray].sort((a, b) => {
+						if (state.sort === SORT_BY.NAME) {
+							return a[1].name.localeCompare(b[1].name, undefined, {
+								sensitivity: "base",
+							});
+						} else if (state.sort === SORT_BY.GENDER) {
+							return a[1].gender.localeCompare(b[1].gender, undefined, {
+								sensitivity: "base",
+							});
+						} else if (state.sort === SORT_BY.CITY) {
+							return a[1].city.localeCompare(b[1].city, undefined, {
+								sensitivity: "base",
+							});
+						} else if (state.sort === SORT_BY.STATE) {
+							return a[1].state.localeCompare(b[1].state, undefined, {
+								sensitivity: "base",
+							});
+						} else if (state.sort === SORT_BY.COUNTRY) {
+							return a[1].country.localeCompare(b[1].country, undefined, {
+								sensitivity: "base",
+							});
+						} else if (state.sort === SORT_BY.EMAIL) {
+							return a[1].email.localeCompare(b[1].email, undefined, {
+								sensitivity: "base",
+							});
+						} else if (state.sort === SORT_BY.DATE_OF_BIRTH) {
+							return (
+								new Date(a[1].dob).getTime() - new Date(b[1].dob).getTime()
+							);
+						} else if (state.sort === SORT_BY.AGE) {
+							return Number(a[1].age) - Number(b[1].age);
+						} else if (state.sort === SORT_BY.PHONE) {
+							return a[1].phone.localeCompare(b[1].phone, undefined, {
+								sensitivity: "base",
+							});
+						} else {
+							return 0;
+						}
+					});
+		const sortedArrayWithOrder =
+			state.order === ORDER.ASC ? sortedArray : sortedArray.reverse();
+		return sortedArrayWithOrder;
+	}, [state.sort, state.order, usersArray]);
 
 	const filteredUsers = useMemo(() => {
 		return state.selectedCountry === countryFilterInitialValue
@@ -90,7 +118,6 @@ export default function useTable() {
 	};
 
 	const sortUsersByHeaderClicking = (_sort: SortBy, _order: Order) => {
-		console.log(`${_sort} ${_order}`);
 		dispatch({
 			type: "SORT_USERS_BY_HEADER_CLICKING",
 			payload: { sort: _sort, order: _order },

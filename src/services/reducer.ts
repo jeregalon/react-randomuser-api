@@ -38,7 +38,7 @@ export const reducer = (state: State, action: Action) => {
 			return {
 				...state,
 				sort: action.payload,
-				order: ORDER.DESC,
+				order: ORDER.ASC,
 			};
 		}
 		case "SORT_USERS_BY_HEADER_CLICKING": {

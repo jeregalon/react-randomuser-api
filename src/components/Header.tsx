@@ -61,8 +61,14 @@ export default function Header() {
 			>
 				<option value={SORT_BY.NONE}>Sin orden</option>
 				<option value={SORT_BY.NAME}>Nombre</option>
+				<option value={SORT_BY.GENDER}>Género</option>
+				<option value={SORT_BY.CITY}>Ciudad</option>
+				<option value={SORT_BY.STATE}>Estado</option>
 				<option value={SORT_BY.COUNTRY}>País</option>
+				<option value={SORT_BY.EMAIL}>E-mail</option>
 				<option value={SORT_BY.DATE_OF_BIRTH}>Fecha de nacimiento</option>
+				<option value={SORT_BY.AGE}>Edad</option>
+				<option value={SORT_BY.PHONE}>No. de teléfono</option>
 			</select>
 			<button
 				className="rounded-lg cursor-pointer bg-blue-500 text-white ml-4"

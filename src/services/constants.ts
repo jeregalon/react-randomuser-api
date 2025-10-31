@@ -15,6 +15,18 @@ export const SORT_BY = {
 	PHONE: "Phone",
 };
 
+export const arrayOfSortBy = [
+	SORT_BY.NAME,
+	SORT_BY.GENDER,
+	SORT_BY.CITY,
+	SORT_BY.STATE,
+	SORT_BY.COUNTRY,
+	SORT_BY.EMAIL,
+	SORT_BY.DATE_OF_BIRTH,
+	SORT_BY.AGE,
+	SORT_BY.PHONE,
+];
+
 export const ORDER = {
 	NONE: "none",
 	ASC: "asc",
